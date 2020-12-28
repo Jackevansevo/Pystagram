@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <title> </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/tachyons/css/tachyons.min.css">
+  <body class="bg-near-white">
+      <nav class="bg-white ba b--moon-gray pv3 flex justify-center mb3">
+          <div class="flex items-center">
+              <a href="{% url 'index' %}"class="link black dim baskerville i fw3 f3 pr5">Jackstagram</a>
+              {% if request.user.is_authenticated %}
+              <a class="link dim black helvetica pr5" href="{% url 'upload' %}">Upload</a>
+              <form action="{% url 'search' %}">
+                <input class="input-reset bg-near-white ba b--moon-gray br1 helvetica pa1 tc" placeholder="Search" name="q" required minlength="2">
+              </form>
+              <a href="{% url 'user_profile' request.user.username %}">
+                  {% if request.user.avatar %}
+                    <img src="{{ request.user.avatar.url }}" class="br-100 h2 w2 dib ml3" title="Photo of a kitty staring at you" alt="{{ user.username }}">
+                  {% else %}
+                    <span class="ml3">{{ request.user.username }}</span>
+                  {% endif %}
+              </a>
+              {% endif %}
+          </div>
+      </nav>
+      <div class="w-100 sans-serif">
+          {% block content %}
+          {% endblock %}
+      </div>
+      </div>
+  </body>
+</html>
+

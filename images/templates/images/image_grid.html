@@ -1,0 +1,7 @@
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-gap: 10px; padding-top: 2em;">
+    {% for upload in uploads %}
+    <a href="{{ upload.get_absolute_url }}">
+        <img src="{{ upload.image.url }}" alt="{{ upload.description }}" style="object-fit: cover; width: 300px; height: 300px;">
+    </a>
+    {% endfor %}
+</div>

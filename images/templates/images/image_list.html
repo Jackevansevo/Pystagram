@@ -1,0 +1,27 @@
+{% for upload in uploads %}
+<article class="ba bg-white b--moon-gray br2 mv3 w-200 w-10-m w-50-l mw6">
+    <a class="link helvetica" href="{% url 'user_profile' upload.uploader.username %}">
+        <div class="pv3 flex items-center">
+            <img src="{{ upload.uploader.avatar.url }}" class="br-100 h2 w2 dib ml3" title="{{ upload.description }}">
+            <span class=" b link dim black pl3">{{ upload.uploader.username }}</span>
+        </div>
+    </a>
+    <img src="{{ upload.image.url }}" class="db w-100" alt="{{ upload.image.description }}">
+    <div class="pa2 ph3-ns pb3-ns">
+        <p class="b f6 lh-copy measure mt2 dark-gray">
+        {{ upload.total_likes }} likes
+        </p>
+        <p class="f6 lh-copy measure mt2 mid-gray">
+        {{ upload.description }}
+        </p>
+        <p class="f7 code lh-copy measure mt2 gray">
+        {{ upload.created_on|timesince|upper }} AGO
+        </p>
+        {% if upload.liked %}
+            <a href="{% url 'unlike' upload.pk %}">UnLike</a>
+        {% else %}
+            <a href="{% url 'like' upload.pk %}">Like</a>
+        {% endif %}
+    </div>
+</article>
+{% endfor %}

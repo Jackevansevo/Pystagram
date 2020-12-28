@@ -1,0 +1,26 @@
+<main class="mw6 center">
+    {% for user in users %}
+    <article class="dt w-100 bb b--black-05 pb2 mt2" href="#0">
+        <a class="link dim" href="{{ user.get_absolute_url }}">
+        <div class="dtc w2 w3-ns v-mid">
+            <img src="{{ user.avatar.url }}" class="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"/>
+        </div>
+        <div class="dtc v-mid pl3">
+            <h1 class="f6 f5-ns fw6 lh-title black mv0">{{ user.get_full_name }}</h1>
+            <h2 class="f6 fw4 mt0 mb0 black-60">@{{ user.username }}</h2>
+        </div>
+        </a>
+        <div class="dtc v-mid">
+            <div class="w-100 tr">
+                {% if request.user != user %}
+                    <a href="{% url 'follow_user' user %}" class="link f6 bg-white pa2 ba b--black-10 dim pv1 black-60" type="submit">+ Follow</a>
+                {% else %}
+                    <h1 class="f6 fw4 mt0 mb0 black-60">It's you</h1>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    {% empty %}
+    <p>Nothing to show</p>
+    {% endfor %}
+</main>

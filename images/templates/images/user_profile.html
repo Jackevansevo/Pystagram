@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex flex-column items-center">
+    <div class="flex flex-column items-center">
+        <div class="flex w-100">
+            <div style="margin-right: 50px">
+                <img src="{{ user.avatar.url }}" style="border-radius: 100%; max-width: 300px; object-fit: cover" alt="{{ user.username }} avatar">
+            </div>
+            <div class="flex flex-column w-100">
+                <div class="flex justify-start items-center">
+                    <h2 class="pr3 f2 fw2 b helvetica lh-copy mv0">{{ user.username }}</h2>
+                    <div>
+                        {% if request.user.is_authenticated and request.user != user %}
+                        {% if following %}
+                        <a class="helvetica f6 link dim d-block b dark-gray pv1 ph2 ba b--moon-gray bg-white" href="{% url 'unfollow_user' user.username %}">Unfollow</a>
+                        {% else %}
+                        <a class="helvetica f6 link dim d-block b dark-gray pv1 ph2 ba b--moon-gray bg-white" href="{% url 'follow_user' user.username %}">Follow</a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex lh-copy helvetica f5">
+                    <p class="pr3"><b>{{ user.num_uploads|default:"0" }}</b> Posts</p>
+                    {% if not user.private or user == request.user %}
+                    <a class="pr3 link dim" href="{% url 'user_followers' user.username %}"><p class="pr-3"><b>{{ user.num_followers|default:"0" }}</b> Followers</p></a>
+                    <a class="pr3 link dim" href="{% url 'user_following' user.username %}"><p class="pr-3"><b>{{ user.num_following|default:"0" }}</b> Following</p></a>
+                    {% else %}
+                    <span class="pr3 link dim"><p class="pr-3"><b>{{ user.num_followers|default:"0" }}</b> Followers</p></span>
+                    <span class="pr3 link dim"><p class="pr-3"><b>{{ user.num_following|default:"0" }}</b> Following</p></span>
+                    {% endif %}
+                </div>
+                {% if user.description %}
+                <p class="lh-copy f5 helvetica">{{ user.description }}</p>
+                {% endif %}
+                {% if request.user.is_authenticated and follows_you %}
+                <p class="lh-copy f5 helvetica">Follows You</p>
+                {% endif %}
+            </div>
+        </div>
+        {% include "images/image_grid.html" with uploads=user.uploads.all %}
+    </div>
+</div>
+{% endblock %}
