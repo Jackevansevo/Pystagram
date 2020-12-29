@@ -11,7 +11,7 @@ from .models import Upload, User
 from .serializers import UploadSerializer, UserSerializer
 
 # [TODO]
-# user sign up flow
+#  user sign up flow
 # rework /api endpoints to better reflect application structure (i.e. /feed | /user | /user/followers)
 
 
@@ -25,15 +25,17 @@ class UploadViewSet(viewsets.ModelViewSet):
     serializer_class = UploadSerializer
 
 
-
-
 @login_required
 def index(request):
     #  A flat list of all the usernames our currently logged in user is following
-    user_following = request.user.following.values_list("username", flat=True)
-    uploads = Upload.objects.filter(uploader__username__in=user_following).annotate(
-        total_likes=Count("likes"),
-        liked=Exists(request.user.liked.filter(pk=OuterRef("pk"))),
+    uploads = (
+        Upload.objects.select_related("uploader")
+        .prefetch_related("likes")
+        .filter(uploader__followers__in=[request.user.pk])
+        .annotate(
+            total_likes=Count("likes"),
+            liked=Exists(request.user.liked.filter(pk=OuterRef("pk"))),
+        )
     )
     context = {"uploads": uploads}
     return render(request, "images/index.html", context)
